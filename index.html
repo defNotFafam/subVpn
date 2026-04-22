@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VPN Subscription</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    height: 100vh;
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e293b, #020617);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.card {
+    width: 360px;
+    padding: 25px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 10px;
+}
+
+.usage {
+    font-size: 15px;
+    color: #cbd5f5;
+    margin-bottom: 12px;
+}
+
+.bar {
+    height: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+    transition: width 1.5s ease;
+}
+
+.config {
+    background: rgba(255,255,255,0.08);
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    word-break: break-all;
+    color: #93c5fd;
+    margin-bottom: 15px;
+}
+
+.btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+    color: white;
+    cursor: pointer;
+}
+
+.copied {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #22c55e;
+    opacity: 0;
+    transition: 0.3s;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>VPN Subscription</h2>
+
+    <div class="usage" id="usageText">
+        0.00 GB / 100 GB
+    </div>
+
+    <div class="bar">
+        <div id="progress" class="fill"></div>
+    </div>
+
+    <div class="config" id="config"></div>
+
+    <button class="btn" onclick="copyConfig()">Copy Config</button>
+    <div id="copiedMsg" class="copied">Copied ✓</div>
+</div>
+
+<script>
+
+// ===== CONFIG =====
+const CONFIG = "vless://5ac31e0c-5e12-4756-9c9e-0103b8bac4ed@snapp.ir:2086?path=%2Fw&security=&encryption=none&host=p.pavps.ir&type=ws#In3-mv2h9jzn🦦🦦-100.00GB📊";
+
+let totalGB = 100;
+let usedGB = 0;
+
+document.getElementById("config").innerText = CONFIG;
+
+// ===== COPY FUNCTION =====
+function copyConfig() {
+    navigator.clipboard.writeText(CONFIG);
+    let msg = document.getElementById("copiedMsg");
+    msg.style.opacity = 1;
+    setTimeout(() => msg.style.opacity = 0, 1500);
+}
+
+// ===== SIMULATION =====
+function simulateUsage() {
+    if (usedGB >= totalGB) return;
+
+    usedGB += 0.01; // every cycle adds 0.01 GB
+
+    if (usedGB > totalGB) usedGB = totalGB;
+}
+
+// ===== UPDATE UI =====
+function updateUI() {
+    let percent = (usedGB / totalGB) * 100;
+
+    document.getElementById("usageText").innerText =
+        usedGB.toFixed(2) + " GB / " + totalGB + " GB";
+
+    document.getElementById("progress").style.width =
+        percent + "%";
+}
+
+// ===== LOOP =====
+setInterval(() => {
+    simulateUsage();
+    updateUI();
+}, 20000); // 20 seconds
+
+updateUI();
+
+</script>
+
+</body>
+</html>
